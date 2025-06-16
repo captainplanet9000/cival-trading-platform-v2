@@ -153,7 +153,19 @@ export function RiskDashboard() {
   useEffect(() => {
     // Subscribe to risk alerts
     const riskAlertSub = subscribe('portfolio.risk_alert', (event) => {
-      const alert = event.data as RiskAlert
+      const alertData = event.data
+      const alert: RiskAlert = {
+        id: Date.now().toString(),
+        type: 'var_breach', // Default for now, should map alertData.risk_type to valid type
+        severity: alertData.current_level > alertData.threshold ? 'critical' : 'medium',
+        message: `${alertData.risk_type} alert: Level ${alertData.current_level} exceeds threshold ${alertData.threshold}`,
+        timestamp: Date.now(),
+        resolved: false,
+        details: alertData.recommendation || 'Risk threshold exceeded',
+        value: alertData.current_level,
+        threshold: alertData.threshold,
+        acknowledged: false
+      }
       setAlerts(prev => [alert, ...prev])
       
       // Emit system notification for critical alerts
@@ -554,7 +566,7 @@ export function RiskDashboard() {
                         labelFormatter={(value) => new Date(value).toLocaleString()}
                         formatter={(value, name) => [
                           name === 'var95' ? formatCurrency(value as number) : `${(value as number).toFixed(2)}%`,
-                          name.toUpperCase()
+                          String(name).toUpperCase()
                         ]}
                       />
                       <Line

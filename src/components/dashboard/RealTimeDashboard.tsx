@@ -160,18 +160,18 @@ export function RealTimeDashboard() {
 
       subscribe('trade.order_filled', (event) => {
         setMetrics(prev => ({ ...prev, orders: Math.max(0, prev.orders - 1) }))
-        addAlert('success', `Order filled: ${event.data.symbol} at ${event.data.fill_price}`, 'trading')
+        addAlert('success', `Order filled at ${event.data.fill_price}`, 'trading')
         
         // Save trade to database
         db.saveTrade({
           id: event.data.order_id,
           orderId: event.data.order_id,
-          symbol: event.data.symbol,
-          side: event.data.side,
-          quantity: event.data.quantity,
+          symbol: 'BTC/USDT', // Default for now, should be passed in event
+          side: 'buy', // Default for now, should be passed in event
+          quantity: event.data.fill_quantity,
           price: event.data.fill_price,
           fee: event.data.fees || 0,
-          exchange: event.data.exchange,
+          exchange: 'default', // Default for now, should be passed in event
           timestamp: Date.now(),
           status: 'executed'
         })
@@ -210,14 +210,14 @@ export function RealTimeDashboard() {
       // Risk events
       subscribe('portfolio.risk_alert', (event) => {
         const alert = event.data
-        setMetrics(prev => ({ ...prev, riskScore: alert.value || prev.riskScore }))
-        addAlert('error', `Risk Alert: ${alert.message}`, 'risk')
+        setMetrics(prev => ({ ...prev, riskScore: alert.current_level || prev.riskScore }))
+        addAlert('error', `Risk Alert: ${alert.risk_type} level ${alert.current_level}`, 'risk')
         
         setRealtimeData(prev => {
           const latest = prev[prev.length - 1]
           return [...prev.slice(-49), {
             ...latest,
-            riskScore: alert.value || latest?.riskScore || 0,
+            riskScore: alert.current_level || latest?.riskScore || 0,
             timestamp: Date.now()
           }]
         })

@@ -348,7 +348,7 @@ export class TradingStrategies {
     for (const symbol of config.symbols) {
       try {
         const currentPrice = await this.marketData.getPrice(symbol)
-        const historicalData = await this.marketData.getHistoricalData(symbol, config.timeframe, 100)
+        const historicalData = await this.marketData.getHistoricalData(symbol, config.timeframe as '1m' | '1h' | '1d' | '5m', 100)
         
         if (!currentPrice || historicalData.length < 50) continue
 
@@ -431,7 +431,7 @@ export class TradingStrategies {
     for (const symbol of config.symbols) {
       try {
         const currentPrice = await this.marketData.getPrice(symbol)
-        const historicalData = await this.marketData.getHistoricalData(symbol, config.timeframe, 100)
+        const historicalData = await this.marketData.getHistoricalData(symbol, config.timeframe as '1m' | '1h' | '1d' | '5m', 100)
         
         if (!currentPrice || historicalData.length < 50) continue
 
@@ -504,7 +504,7 @@ export class TradingStrategies {
     for (const symbol of config.symbols) {
       try {
         const currentPrice = await this.marketData.getPrice(symbol)
-        const historicalData = await this.marketData.getHistoricalData(symbol, config.timeframe, 100)
+        const historicalData = await this.marketData.getHistoricalData(symbol, config.timeframe as '1m' | '1h' | '1d' | '5m', 100)
         
         if (!currentPrice || historicalData.length < 50) continue
 
@@ -642,8 +642,8 @@ export class TradingStrategies {
 
     try {
       // Example: BTC-ETH pairs trading
-      const btcData = await this.marketData.getHistoricalData('BTC', config.timeframe, 100)
-      const ethData = await this.marketData.getHistoricalData('ETH', config.timeframe, 100)
+      const btcData = await this.marketData.getHistoricalData('BTC', config.timeframe as '1m' | '1h' | '1d' | '5m', 100)
+      const ethData = await this.marketData.getHistoricalData('ETH', config.timeframe as '1m' | '1h' | '1d' | '5m', 100)
       
       if (btcData.length < 50 || ethData.length < 50) return signals
 

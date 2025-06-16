@@ -380,7 +380,7 @@ export class HyperliquidConnector {
       timestamp,
       orders: Array.isArray(orderData) ? orderData : [orderData]
     }
-    return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(JSON.stringify(hashData)))
+    return ethers.keccak256(ethers.toUtf8Bytes(JSON.stringify(hashData)))
   }
 
   /**
@@ -393,7 +393,7 @@ export class HyperliquidConnector {
       timestamp,
       cancels: Array.isArray(cancelData) ? cancelData : [cancelData]
     }
-    return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(JSON.stringify(hashData)))
+    return ethers.keccak256(ethers.toUtf8Bytes(JSON.stringify(hashData)))
   }
 
   /**

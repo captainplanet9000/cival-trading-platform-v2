@@ -26,7 +26,7 @@ interface LogBatch {
 export async function POST(request: NextRequest) {
   try {
     const logBatch: LogBatch = await request.json()
-    const headersList = headers()
+    const headersList = await headers()
     const userAgent = headersList.get('user-agent') || 'unknown'
     const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
 

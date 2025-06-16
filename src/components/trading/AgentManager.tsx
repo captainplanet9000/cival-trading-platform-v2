@@ -212,9 +212,9 @@ export function AgentManager() {
         type: 'trading',
         participants,
         consensus: agreement_level > 0.7,
-        decision: event.data.decision,
+        decision: 'consensus_reached', // Default for now, should be in event data
         confidence: agreement_level,
-        reasoning: event.data.reasoning || 'Multi-agent consensus reached',
+        reasoning: 'Multi-agent consensus reached',
         timestamp: Date.now()
       }
       

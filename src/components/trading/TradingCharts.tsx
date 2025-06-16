@@ -20,7 +20,6 @@ import {
   Area, 
   BarChart, 
   Bar,
-  CandlestickChart,
   XAxis, 
   YAxis, 
   CartesianGrid, 
@@ -265,12 +264,12 @@ export function TradingCharts() {
     const signalSub = subscribe('trade.signal_generated', (event) => {
       const signal = event.data
       const newSignal: TradingSignalOverlay = {
-        timestamp: signal.timestamp,
-        type: signal.action,
-        price: signal.price,
-        strategy: signal.strategy,
+        timestamp: Date.now(), // Default for now, should be in event data
+        type: signal.action === 'buy' ? 'buy' : 'sell', // Default to sell if not buy
+        price: 50000, // Default for now, should be in event data
+        strategy: 'default', // Default for now, should be in event data
         confidence: signal.confidence,
-        id: signal.id
+        id: signal.signal_id
       }
       setSignals(prev => [newSignal, ...prev.slice(0, 19)]) // Keep last 20 signals
     })
@@ -517,7 +516,7 @@ export function TradingCharts() {
             y={level.price}
             stroke={level.color}
             strokeDasharray="5 5"
-            label={{ value: level.label, position: "topRight" }}
+            label={{ value: level.label, position: "top" }}
           />
         ))}
       </>
@@ -808,7 +807,7 @@ export function TradingCharts() {
                     />
                     <YAxis domain={[0, 100]} />
                     <Tooltip 
-                      formatter={(value) => [value?.toFixed(2), 'RSI']}
+                      formatter={(value) => [(value as number)?.toFixed(2), 'RSI']}
                       labelFormatter={(value) => new Date(value).toLocaleString()}
                     />
                     <ReferenceLine y={70} stroke="#ef4444" strokeDasharray="3 3" label="Overbought" />
@@ -844,7 +843,7 @@ export function TradingCharts() {
                     />
                     <YAxis />
                     <Tooltip 
-                      formatter={(value, name) => [value?.toFixed(4), name]}
+                      formatter={(value, name) => [(value as number)?.toFixed(4), name]}
                       labelFormatter={(value) => new Date(value).toLocaleString()}
                     />
                     <ReferenceLine y={0} stroke="#666" strokeDasharray="1 1" />

@@ -1,16 +1,28 @@
 [build]
 builder = "nixpacks"
 buildCommand = "npm run build"
+watchPatterns = ["src/**/*", "public/**/*", "package.json", "next.config.js"]
 
 [deploy]
 startCommand = "npm start"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 10
+healthcheckPath = "/"
+healthcheckTimeout = 300
 
 [env]
 NODE_ENV = "production"
 NIXPACKS_NODE_VERSION = "18"
+PORT = "3000"
+NEXT_TELEMETRY_DISABLED = "1"
 
 [[services]]
 [services.web]
 tcpProxyApplicationPort = 3000
+
+# Optional: Backend service (if deploying Python backend)
+# [[services]]
+# [services.api]
+# build.buildCommand = "cd python-ai-services && pip install -r requirements.txt"
+# build.startCommand = "cd python-ai-services && python main_consolidated.py"
+# tcpProxyApplicationPort = 8000

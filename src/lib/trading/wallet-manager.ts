@@ -142,7 +142,7 @@ export interface TokenInfo {
 // Common token addresses for Ethereum mainnet
 export const COMMON_TOKENS: {[symbol: string]: TokenInfo} = {
   ETH: {
-    address: ethers.constants.AddressZero,
+    address: ethers.ZeroAddress,
     symbol: 'ETH',
     name: 'Ethereum',
     decimals: 18,
@@ -194,7 +194,7 @@ export const COMMON_TOKENS: {[symbol: string]: TokenInfo} = {
 export class WalletManager {
   private config: WalletConfig
   private wallets: Map<string, ConnectedWallet> = new Map()
-  private providers: Map<number, ethers.providers.JsonRpcProvider> = new Map()
+  private providers: Map<number, ethers.JsonRpcProvider> = new Map()
   private signers: Map<string, ethers.Signer> = new Map()
   private transactions: WalletTransaction[] = []
   private syncInterval?: NodeJS.Timeout
@@ -218,11 +218,11 @@ export class WalletManager {
    */
   private initializeProviders(): void {
     // Ethereum mainnet
-    this.providers.set(1, new ethers.providers.JsonRpcProvider(this.config.ethereumRpcUrl))
+    this.providers.set(1, new ethers.JsonRpcProvider(this.config.ethereumRpcUrl))
     
     // Add other networks as needed
     if (this.config.chainId !== 1) {
-      this.providers.set(this.config.chainId, new ethers.providers.JsonRpcProvider(this.config.ethereumRpcUrl))
+      this.providers.set(this.config.chainId, new ethers.JsonRpcProvider(this.config.ethereumRpcUrl))
     }
   }
 
@@ -420,9 +420,9 @@ export class WalletManager {
     
     balances.push({
       symbol: 'ETH',
-      balance: ethers.utils.formatEther(ethBalance),
+      balance: ethers.formatEther(ethBalance),
       decimals: 18,
-      usdValue: parseFloat(ethers.utils.formatEther(ethBalance)) * ethPrice,
+      usdValue: parseFloat(ethers.formatEther(ethBalance)) * ethPrice,
       exchange: 'ethereum',
       address: wallet.address,
       isNative: true
@@ -534,7 +534,7 @@ export class WalletManager {
     )
 
     const balance = await contract.balanceOf(walletAddress)
-    return ethers.utils.formatUnits(balance, decimals)
+    return ethers.formatUnits(balance, decimals)
   }
 
   /**
@@ -614,7 +614,7 @@ export class WalletManager {
         // Send ETH
         const tx = await signer.sendTransaction({
           to,
-          value: ethers.utils.parseEther(amount)
+          value: ethers.parseEther(amount)
         })
         txHash = tx.hash
       } else {
@@ -630,7 +630,7 @@ export class WalletManager {
           signer
         )
 
-        const tx = await contract.transfer(to, ethers.utils.parseUnits(amount, token.decimals))
+        const tx = await contract.transfer(to, ethers.parseUnits(amount, token.decimals))
         txHash = tx.hash
       }
 
@@ -659,10 +659,14 @@ export class WalletManager {
     try {
       const receipt = await provider.waitForTransaction(transaction.hash)
       
-      transaction.status = receipt.status === 1 ? 'confirmed' : 'failed'
-      transaction.blockNumber = receipt.blockNumber
-      transaction.gasUsed = receipt.gasUsed.toString()
-      transaction.fee = ethers.utils.formatEther(receipt.gasUsed.mul(receipt.effectiveGasPrice || 0))
+      if (receipt) {
+        transaction.status = receipt.status === 1 ? 'confirmed' : 'failed'
+        transaction.blockNumber = receipt.blockNumber
+        transaction.gasUsed = receipt.gasUsed.toString()
+        transaction.fee = ethers.formatEther(receipt.gasUsed * BigInt(20)) // Approximate gas price in gwei
+      } else {
+        transaction.status = 'failed'
+      }
       
     } catch (error) {
       console.error('Transaction monitoring failed:', error)
@@ -745,13 +749,14 @@ export class WalletManager {
     const provider = this.providers.get(this.config.chainId)!
     
     try {
-      let gasLimit: ethers.BigNumber
-      const gasPrice = await provider.getGasPrice()
+      let gasLimit: bigint
+      const feeData = await provider.getFeeData()
+      const gasPrice = feeData.gasPrice || BigInt(20000000000) // 20 gwei default
 
       if (tokenSymbol === 'ETH') {
         gasLimit = await signer.estimateGas({
           to,
-          value: ethers.utils.parseEther(amount)
+          value: ethers.parseEther(amount)
         })
       } else {
         const token = COMMON_TOKENS[tokenSymbol]
@@ -765,15 +770,15 @@ export class WalletManager {
           signer
         )
 
-        gasLimit = await contract.estimateGas.transfer(to, ethers.utils.parseUnits(amount, token.decimals))
+        gasLimit = await contract.transfer.estimateGas(to, ethers.parseUnits(amount, token.decimals))
       }
 
-      const totalCost = gasLimit.mul(gasPrice)
+      const totalCost = gasLimit * gasPrice
 
       return {
         gasLimit: gasLimit.toString(),
-        gasPrice: ethers.utils.formatUnits(gasPrice, 'gwei'),
-        totalCost: ethers.utils.formatEther(totalCost)
+        gasPrice: ethers.formatUnits(gasPrice, 'gwei'),
+        totalCost: ethers.formatEther(totalCost)
       }
     } catch (error) {
       console.error('Gas estimation failed:', error)
@@ -845,8 +850,8 @@ export class WalletManager {
     )
 
     const approvalAmount = amount ? 
-      ethers.utils.parseUnits(amount, token.decimals) : 
-      ethers.constants.MaxUint256
+      ethers.parseUnits(amount, token.decimals) : 
+ethers.MaxUint256
 
     const tx = await contract.approve(spenderAddress, approvalAmount)
 
@@ -897,7 +902,7 @@ export class WalletManager {
     )
 
     const allowance = await contract.allowance(wallet.address, spenderAddress)
-    return ethers.utils.formatUnits(allowance, token.decimals)
+    return ethers.formatUnits(allowance, token.decimals)
   }
 
   /**

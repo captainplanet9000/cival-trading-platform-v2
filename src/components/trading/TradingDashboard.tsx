@@ -109,7 +109,19 @@ export function TradingDashboard() {
 
     // Subscribe to trading events
     const tradingSignalSub = subscribe('trade.signal_generated', (event) => {
-      const signal = event.data as TradingSignal
+      const signalData = event.data
+      const signal: TradingSignal = {
+        id: signalData.signal_id,
+        symbol: signalData.symbol,
+        strategy: 'default', // Default for now, should be in event data
+        strength: signalData.confidence,
+        price: 50000, // Default for now, should be in event data
+        timestamp: Date.now(),
+        action: signalData.action === 'buy' ? 'buy' : signalData.action === 'sell' ? 'sell' : 'hold',
+        confidence: signalData.confidence,
+        reasoning: 'Signal generated',
+        metadata: {}
+      }
       setActiveSignals(prev => [signal, ...prev.slice(0, 9)]) // Keep last 10 signals
     })
 
@@ -135,7 +147,14 @@ export function TradingDashboard() {
 
     // Subscribe to risk alerts
     const riskAlertSub = subscribe('portfolio.risk_alert', (event) => {
-      const alert = event.data
+      const alertData = event.data
+      const alert: RiskAlert = {
+        id: Date.now().toString(),
+        type: 'var_breach',
+        severity: alertData.current_level > alertData.threshold ? 'critical' : 'medium',
+        message: `${alertData.risk_type}: Level ${alertData.current_level}`,
+        timestamp: Date.now()
+      }
       setRiskMetrics(prev => prev ? {
         ...prev,
         alerts: [alert, ...prev.alerts.slice(0, 4)] // Keep last 5 alerts

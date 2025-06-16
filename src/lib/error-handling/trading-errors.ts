@@ -2,7 +2,9 @@
  * Trading-specific error handling and recovery
  */
 
+import React from 'react'
 import { logger } from './logger'
+import { ErrorBoundary } from './error-boundary'
 
 // Trading Error Types
 export class TradingError extends Error {
@@ -366,15 +368,15 @@ export const withErrorHandling = <T extends any[], R>(
 }
 
 // Error boundary hook for React components
-export const withErrorBoundary = (Component: React.ComponentType, fallback?: React.ComponentType) => {
-  return function ErrorBoundaryWrapper(props: any) {
-    return React.createElement(
-      ErrorBoundary,
-      { fallback: fallback ? React.createElement(fallback) : undefined },
-      React.createElement(Component, props)
-    )
-  }
-}
+// export const withErrorBoundary = (Component: React.ComponentType, fallback?: React.ComponentType) => {
+//   return function ErrorBoundaryWrapper(props: any) {
+//     return React.createElement(
+//       ErrorBoundary,
+//       { fallback: fallback ? React.createElement(fallback) : undefined },
+//       React.createElement(Component, props)
+//     )
+//   }
+// }
 
 // API error handler utility
 export const handleApiError = async (response: Response, context?: string): Promise<any> => {
@@ -401,13 +403,4 @@ export const handleApiError = async (response: Response, context?: string): Prom
   return response.json()
 }
 
-export {
-  TradingError,
-  OrderExecutionError,
-  InsufficientFundsError,
-  RiskLimitExceededError,
-  MarketDataError,
-  ExchangeConnectionError,
-  AgentExecutionError,
-  ErrorRecoveryManager
-}
+// All classes are already exported above

@@ -21,7 +21,7 @@ interface ErrorReport {
 export async function POST(request: NextRequest) {
   try {
     const errorReport: ErrorReport = await request.json()
-    const headersList = headers()
+    const headersList = await headers()
     const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || 'unknown'
 
     // Validate error report

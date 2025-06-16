@@ -124,7 +124,19 @@ export function TradingInterface() {
   useEffect(() => {
     // Subscribe to order updates
     const orderSub = subscribe('trade.order_placed', (event) => {
-      const newOrder = event.data as Order
+      const orderData = event.data
+      const newOrder: Order = {
+        id: orderData.order_id,
+        symbol: orderData.symbol,
+        side: orderData.side === 'buy' ? 'buy' : 'sell',
+        type: 'market', // Default type
+        quantity: orderData.quantity,
+        price: orderData.price,
+        status: 'pending',
+        exchange: 'default',
+        timestamp: Date.now(),
+        timeInForce: 'GTC'
+      }
       setOrders(prev => [newOrder, ...prev])
       setOrderError(null)
     })

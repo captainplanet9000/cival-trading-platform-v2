@@ -24,7 +24,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react'
-import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Cell } from 'recharts'
+import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart as RechartsPieChart, Pie, Cell } from 'recharts'
 
 // AG-UI Protocol integration
 import { subscribe, emit, type TradingEvents, type WalletEvents } from '@/lib/ag-ui-protocol-v2'

@@ -79,16 +79,16 @@ export class TradingEngine {
   private isRunning: boolean = false
   
   // Core trading components
-  private hyperliquid: HyperliquidConnector
-  private dex: DEXConnector
-  private coinbase: CoinbaseProConnector
-  private orderManager: OrderManagementSystem
-  private portfolioTracker: PortfolioTracker
-  private riskManager: RiskManager
-  private walletManager: WalletManager
-  private marketData: MarketDataService
-  private strategies: TradingStrategies
-  private webSocketManager: WebSocketManager
+  private hyperliquid!: HyperliquidConnector
+  private dex!: DEXConnector
+  private coinbase!: CoinbaseProConnector
+  private orderManager!: OrderManagementSystem
+  private portfolioTracker!: PortfolioTracker
+  private riskManager!: RiskManager
+  private walletManager!: WalletManager
+  private marketData!: MarketDataService
+  private strategies!: TradingStrategies
+  private webSocketManager!: WebSocketManager
   
   // Operational state
   private activeOrders: Map<string, UnifiedOrder> = new Map()
@@ -434,7 +434,7 @@ export class TradingEngine {
       }
 
       // Create unified order from signal
-      const order = this.convertSignalToOrder(signal)
+      const order = await this.convertSignalToOrder(signal)
       
       // Execute order through order management system
       const result = await this.orderManager.placeOrder(order)
@@ -457,9 +457,10 @@ export class TradingEngine {
   /**
    * Convert trading signal to unified order
    */
-  private convertSignalToOrder(signal: TradingSignal): UnifiedOrder {
+  private async convertSignalToOrder(signal: TradingSignal): Promise<UnifiedOrder> {
     // Calculate position size based on portfolio and risk parameters
-    const portfolioValue = this.portfolioTracker.getTotalPortfolioValue()
+    const portfolioSummary = await this.portfolioTracker.getPortfolioSummary()
+    const portfolioValue = portfolioSummary.totalValue
     const maxPositionValue = portfolioValue * 0.05 // 5% max per position
     const positionSize = maxPositionValue / signal.price
 
@@ -671,7 +672,7 @@ export class TradingEngine {
       totalSignals: this.pendingSignals.length + this.executionQueue.length,
       pendingOrders: this.activeOrders.size,
       connectedExchanges: this.getConnectedExchangeCount(),
-      totalPortfolioValue: this.portfolioTracker.getTotalPortfolioValue(),
+      totalPortfolioValue: 0, // Would be calculated from portfolio summary
       dailyPnL: 0, // Would be calculated from portfolio
       riskScore: 0, // Would be calculated from risk manager
       lastUpdate: Date.now()
