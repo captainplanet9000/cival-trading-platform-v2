@@ -2,7 +2,7 @@
 
 A comprehensive, production-ready algorithmic trading dashboard built with Next.js, featuring real-time market data, AI-powered strategies, paper trading, risk management, and MCP (Model Context Protocol) server integration.
 
-## 🚀 Core Features
+
 ## 🚀 Key Features
 
 ### 🤖 **AI & Machine Learning**
