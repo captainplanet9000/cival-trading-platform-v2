@@ -3,28 +3,37 @@
 A comprehensive, production-ready algorithmic trading dashboard built with Next.js, featuring real-time market data, AI-powered strategies, paper trading, risk management, and MCP (Model Context Protocol) server integration.
 
 ## 🚀 Core Features
-🤖 AI & Machine Learning
-Multi-LLM Integration: GPT-4, Claude, Hugging Face models
-Autonomous Agent Coordination: Collaborative decision-making
-Intelligent Goal Management: Adaptive target optimization
-Predictive Risk Assessment: AI-driven risk modeling
-💹 Trading Capabilities
-Multi-Strategy Trading: 5+ advanced trading algorithms
-Multi-Exchange Support: Binance, Coinbase, Kraken integration
-Real-time Arbitrage: Cross-exchange opportunity detection
-Advanced Order Management: Smart order routing and execution
-🛡️ Risk Management
-Real-time VaR Calculation: Portfolio-level risk monitoring
-Stress Testing: Scenario-based risk assessment
-Automated Risk Mitigation: Position reduction and circuit breakers
-Comprehensive Compliance: Regulatory risk controls
-⚡ Production Features
-AG-UI Protocol v2: Real-time event-driven communication
-Health Monitoring: Comprehensive system monitoring
-Auto-scaling: Dynamic resource allocation
-Security Hardening: Multi-layer security architecture
-🏗️ System Architecture
-Complete Service Ecosystem (15+ Services)
+## 🚀 Key Features
+
+### 🤖 **AI & Machine Learning**
+- **Multi-LLM Integration**: GPT-4, Claude, Hugging Face models
+- **Autonomous Agent Coordination**: Collaborative decision-making
+- **Intelligent Goal Management**: Adaptive target optimization
+- **Predictive Risk Assessment**: AI-driven risk modeling
+
+### 💹 **Trading Capabilities**
+- **Multi-Strategy Trading**: 5+ advanced trading algorithms
+- **Multi-Exchange Support**: Binance, Coinbase, Kraken integration
+- **Real-time Arbitrage**: Cross-exchange opportunity detection
+- **Advanced Order Management**: Smart order routing and execution
+
+### 🛡️ **Risk Management**
+- **Real-time VaR Calculation**: Portfolio-level risk monitoring
+- **Stress Testing**: Scenario-based risk assessment
+- **Automated Risk Mitigation**: Position reduction and circuit breakers
+- **Comprehensive Compliance**: Regulatory risk controls
+
+### ⚡ **Production Features**
+- **AG-UI Protocol v2**: Real-time event-driven communication
+- **Health Monitoring**: Comprehensive system monitoring
+- **Auto-scaling**: Dynamic resource allocation
+- **Security Hardening**: Multi-layer security architecture
+
+## 🏗️ System Architecture
+
+### **Complete Service Ecosystem (15+ Services)**
+
+```
 🎯 AI & LLM Services
 ├── LLM Integration Service      # Multi-provider AI integration
 ├── Autonomous Agent Coordinator # Multi-agent decision making
@@ -45,7 +54,11 @@ Complete Service Ecosystem (15+ Services)
 ├── Service Registry            # Dependency injection system
 ├── Database Manager           # Multi-database coordination
 └── Performance Monitoring     # System health tracking
-Frontend Architecture (React + TypeScript)
+```
+
+### **Frontend Architecture (React + TypeScript)**
+
+```
 🖥️ React Frontend Components
 ├── System Overview Dashboard    # Complete system status
 ├── Real-time Trading Dashboard # Live monitoring
@@ -53,13 +66,19 @@ Frontend Architecture (React + TypeScript)
 ├── Master Wallet Dashboard     # Wallet management
 ├── Agent Communication Panel   # Multi-agent chat
 └── Risk Management Console     # Risk monitoring
-AG-UI Protocol v2 (Production-Ready)
+```
+
+### **AG-UI Protocol v2 (Production-Ready)**
+
+```
 ⚡ Real-time Communication Layer
 ├── Event Bus System           # Advanced event routing
 ├── WebSocket Transport        # Real-time connectivity
 ├── API Integration Layer      # Unified API interface
 ├── Production Monitoring      # Health checks & metrics
 └── Event Router & Filters     # Smart event processing
+```
+
 ### Core Trading Features
 - **Paper Trading Engine** - Risk-free strategy testing with realistic market simulation
 - **Real-time Market Data** - Live price feeds with WebSocket connections
