@@ -4,8 +4,8 @@ import { Database } from '@/types/database.types'
 // Mock server client that uses the same client-side implementation
 // This removes the dependency on next/headers for solo operator usage
 export const createServerClient = () => {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key'
   
   return createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {

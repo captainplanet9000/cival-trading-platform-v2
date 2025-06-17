@@ -3,6 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
   serverExternalPackages: ['ioredis'],
+  experimental: {
+    serverComponentsExternalPackages: ['@supabase/supabase-js']
+  },
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -18,6 +21,9 @@ const nextConfig = {
     TRADING_API_URL: process.env.TRADING_API_URL || 'http://localhost:3001',
     MCP_API_URL: process.env.MCP_API_URL || 'http://localhost:3000',
     VAULT_API_URL: process.env.VAULT_API_URL || 'http://localhost:3002',
+    // Provide build-time fallbacks for Supabase
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co',
+    NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-anon-key',
   },
   async rewrites() {
     return [
